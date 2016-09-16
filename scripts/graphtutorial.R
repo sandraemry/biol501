@@ -78,7 +78,7 @@ mosaicplot(table(mammals_mod2$continent, mammals_mod2$status), col=TRUE, las=2, 
 
 # Fly sex and longevity ---------------------------------------------------
 
-fruitflies <- read.csv("~/Documents/Biol 501/fruitflies.csv")
+fruitflies <- read.csv(file = "./raw_data/fruitflies.csv")
 head(fruitflies)
 str(fruitflies)
 

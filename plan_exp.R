@@ -45,7 +45,6 @@ no_of_success <- pref %>%
   filter(. == "success") %>% 
   count(. == "success")
   
-
 no_of_success <- as.integer(no_of_success[1,2])
 prop_of_success <- no_of_success/n
 
@@ -57,9 +56,10 @@ myCI$lower
 myCI$upper
 myCI$upper - myCI$lower
 
-# loop to calculate confidence intervals 5 times
-fiveCI <- vector("numeric", length = c(5))
-for(i in 1:10) {
+##### loop to calculate confidence intervals 5 times
+n <- 90
+fiveCI = data.frame( lower = rep(0, 5), upper = rep(0, 5))
+for(i in 1:5) {
   pref <- as.data.frame(sample(choice, size = n, replace = FALSE, prob = NULL))
   
   no_of_success <- pref %>% 
@@ -70,7 +70,43 @@ for(i in 1:10) {
   
   myCI <- binom.confint(as.integer(no_of_success), n, method = "ac")
   
-  fiveCI <- c(myCI$lower,  myCI$upper)
-
+  fiveCI$lower[i] <- myCI$lower
+  fiveCI$upper[i] <- myCI$upper
+  
 }
 
+fiveCI
+mean(fiveCI$upper - fiveCI$lower)
+
+#sample size of 90 gives a confidence interval span of ~0.2
+#sample size of 20 gives a confidence interval span of ~0.4
+
+
+# Detect a preference with hypothesis testing -----------------------------
+
+#generate population
+pop <- rep(c("success", "failure"), c(70,30))
+
+#sample size
+n <- 20
+
+#initialize an empty vector
+p_vals <- data.frame(rep(0,10))
+
+for(i in 1:10) {
+  pref <- as.data.frame(sample(choice, size = n, replace = FALSE, prob = NULL))
+  no_of_success <- pref %>% 
+    filter(. == "success") %>% 
+    count(. == "success")
+  no_of_success <- as.integer(no_of_success[1,2])
+  z <- binom.test(as.integer(no_of_success), n, p = 0.5)
+  print(z$p.value)
+  p_vals[i, 1] <- z$p.value
+}
+
+dim(p_vals)
+p_vals %>% 
+  filter(. > 0.95) %>%  
+  filter(. < 0.05) %>% View
+  
+class(p_vals)

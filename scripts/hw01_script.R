@@ -38,6 +38,7 @@ ggplot(feed_mod, aes(x = as.factor(prey_size), y = prof)) +
 
 
 
+
 plot2 <- (feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
   geom_point() + 
   ylab("handling time (min/mussel)") +

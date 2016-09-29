@@ -106,7 +106,26 @@ for(i in 1:10) {
 
 dim(p_vals)
 p_vals %>% 
-  filter(. > 0.95) %>%  
-  filter(. < 0.05) %>% View
-  
-class(p_vals)
+  select(. > 0.95) %>%  
+  select(. < 0.05) %>% View
+
+p_vals[p_vals <= 0.05]
+
+# find a sample size that usually results in the null hypothesis from being rejected
+n <- 1000
+
+for(i in 1:10) {
+  pref <- as.data.frame(sample(choice, size = n, replace = TRUE, prob = NULL))
+  no_of_success <- pref %>% 
+    filter(. == "success") %>% 
+    count(. == "success")
+  no_of_success <- as.integer(no_of_success[1,2])
+  z <- binom.test(as.integer(no_of_success), n, p = 0.5)
+  print(z$p.value)
+  p_vals[i, 1] <- z$p.value
+}
+
+
+# Calculate power and sample size -----------------------------------------
+
+library(pwr)

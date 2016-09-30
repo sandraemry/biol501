@@ -8,6 +8,8 @@ original graph
 
 ![](original_graph.png)
 
+Gooding RA, Harley CDG (2015) Quantifying the Effects of Predator and Prey Body Size on Sea Star Feeding Behaviors. Biol. Bull. 228: 192–200
+
 This study looked at how the size of Pisaster ochraceus, and its prey, Mytilus trossulus, affect predatory behaviour.
 
 The graph shows three feeding criteria of seastars for different sizes of mussels. The data shows that seastars profit more from eating larger mussels and select larger mussels more often. However, handling time is the longest for larger mussels.
@@ -58,13 +60,18 @@ feeding <- feeding %>%
   rename(prey_size = Prey_size, 
          prof = Profitability_g_per_min,
          feed_time = feeding_time_1_hr_d, 
-         hand_time = Handling_time_min) 
+         hand_time = Handling_time_min,
+         seastar = Seastar) 
 
 # calculate proportion of mussels eaten in each size class
 seastars %>% 
   mutate(total_mussels_eaten = sum(eaten_day_seastar)) %>% 
   group_by(mussel_size_mm) %>% 
   summarise(total_eaten_per_size = sum(eaten_day_seastar)) %>% View
+
+feeding %>% 
+  group_by(prey_size) %>% 
+  summarise(total_eaten_per_size = sum(seastar)) %>% View
 ```
 
 updated plots
@@ -75,7 +82,7 @@ Box plot of handling time vs mussel size class
 ``` r
 # handling time vs mussel size 
 ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
-  geom_boxplot(outlier.colour = "red") +
+  geom_boxplot(outlier.colour = "green") +
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("handling time (min/mussel)") +
   xlab("mussel size class") +
@@ -91,7 +98,7 @@ Box plot of profitability vs mussel size
 
 ``` r
 ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) + 
-  geom_boxplot(outlier.colour = "red") + 
+  geom_boxplot(outlier.colour = "green") + 
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("profitability (g tissue/hr)") + 
   xlab("mussel size class") + 
@@ -105,4 +112,4 @@ ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) +
 explanation of new plots
 ------------------------
 
-The new graphs use boxplots instead of bar graphs. This makes it easier for readers to see the distribution of data by including each data point. It also makes the sample size clearer, which is not shown in the original graphs. Any outliers in the data are shown in red.
+The new graphs use boxplots instead of bar graphs. This makes it easier for readers to see the distribution of data by including each data point. It also makes the sample size clearer, which is not shown in the original graphs. Any outliers in the data are shown in green.

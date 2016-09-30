@@ -65,7 +65,7 @@ Box plot of handling time vs mussel size class
 
 ``` r
 # handling time vs mussel size 
-plot2 <- ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
+ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
   geom_boxplot(outlier.colour = "hotpink") +
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("handling time (min/mussel)") +
@@ -76,10 +76,12 @@ plot2 <- ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) +
   expand_limits(y = c(0, 500))
 ```
 
+![](graphics_homework_files/figure-markdown_github/unnamed-chunk-2-1.png)
+
 Box plot of profitability vs mussel size
 
 ``` r
-plot3 <- ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) + 
+ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) + 
   geom_boxplot(outlier.colour = "hotpink") + 
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("profitability (g tissue/hr)") + 
@@ -88,3 +90,5 @@ plot3 <- ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) +
                               "20" = "20 mm", "25" = "25 mm")) +
   theme_bw()
 ```
+
+![](graphics_homework_files/figure-markdown_github/unnamed-chunk-3-1.png)

@@ -1,0 +1,67 @@
+---
+title: "graphics homework"
+author: "Sandra Emry"
+date: "`r format(Sys.Date())`" 
+output: github_document
+---
+
+## data manipulation
+
+```{r}
+# read in data
+seastars <- read.csv(file = "./data/hw01_data.csv")
+feeding <- read.csv(file = "./data/hw01_data_2.csv")
+
+# load packages
+suppressMessages(library(tidyverse))
+
+# examine data
+str(seastars)
+str(feeding)
+
+# rename variables
+feeding <- feeding %>% 
+  rename(prey_size = Prey_size, 
+         prof = Profitability_g_per_min,
+         feed_time = feeding_time_1_hr_d, 
+         hand_time = Handling_time_min) 
+
+# calculate proportion of mussels eaten in each size class
+seastars %>% 
+  mutate(total_mussels_eaten = sum(eaten_day_seastar)) %>% 
+  group_by(mussel_size_mm) %>% 
+  summarise(total_eaten_per_size = sum(eaten_day_seastar)) %>% View
+  
+```
+
+## updated plots
+
+Box plot of handling time vs mussel size class
+```{r}
+# handling time vs mussel size 
+plot2 <- ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
+  geom_boxplot(outlier.colour = "hotpink") +
+  geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
+  ylab("handling time (min/mussel)") +
+  xlab("mussel size class") +
+  scale_x_discrete(labels = c("10" = "10 mm", "15" = "15 mm",
+                              "20" = "20 mm", "25" = "25 mm")) +
+  theme_bw() +
+  expand_limits(y = c(0, 500))
+
+```
+
+Box plot of profitability vs mussel size
+```{r}
+
+plot3 <- ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) + 
+  geom_boxplot(outlier.colour = "hotpink") + 
+  geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
+  ylab("profitability (g tissue/hr)") + 
+  xlab("mussel size class") + 
+  scale_x_discrete(labels = c("10" = "10 mm", "15" = "15 mm",
+                              "20" = "20 mm", "25" = "25 mm")) +
+  theme_bw()
+
+```
+

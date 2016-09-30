@@ -3,6 +3,15 @@ graphics homework
 Sandra Emry
 2016-09-29
 
+original graph
+--------------
+
+![](original_graph.png)
+
+This study looked at how the size of Pisaster ochraceus, and its prey, Mytilus trossulus, affect predatory behaviour.
+
+The graph shows three feeding criteria of seastars for different sizes of mussels. The data shows that seastars profit more from eating larger mussels and select larger mussels more often. However, handling time is the longest for larger mussels.
+
 data manipulation
 -----------------
 
@@ -66,7 +75,7 @@ Box plot of handling time vs mussel size class
 ``` r
 # handling time vs mussel size 
 ggplot(feeding, aes(x = as.factor(prey_size), y = hand_time)) + 
-  geom_boxplot(outlier.colour = "hotpink") +
+  geom_boxplot(outlier.colour = "red") +
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("handling time (min/mussel)") +
   xlab("mussel size class") +
@@ -82,7 +91,7 @@ Box plot of profitability vs mussel size
 
 ``` r
 ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) + 
-  geom_boxplot(outlier.colour = "hotpink") + 
+  geom_boxplot(outlier.colour = "red") + 
   geom_jitter(position = position_jitter(width = 0, height = 0), alpha = 1/2) + 
   ylab("profitability (g tissue/hr)") + 
   xlab("mussel size class") + 
@@ -92,3 +101,8 @@ ggplot(feeding, aes(x = as.factor(prey_size), y = prof)) +
 ```
 
 ![](graphics_homework_files/figure-markdown_github/unnamed-chunk-3-1.png)
+
+explanation of new plots
+------------------------
+
+The new graphs use boxplots instead of bar graphs. This makes it easier for readers to see the distribution of data by including each data point. It also makes the sample size clearer, which is not shown in the original graphs. Any outliers in the data are shown in red.

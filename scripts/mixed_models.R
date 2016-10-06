@@ -2,7 +2,7 @@ library(nlme)
 library(tidyverse)
 
 
-# Flycatcher data ---------------------------------------------------------
+# flycatcher data ---------------------------------------------------------
 
 flycatcher <- read_csv("./data/flycatcher.csv")
 str(flycatcher)
@@ -59,9 +59,14 @@ points(log(phen.ach) ~ c(as.numeric(treatment) - 0.1),
 points(log(phen.ach) ~ c(as.numeric(treatment) + 0.1), 
         data = subset(kluane, duration == "reverse"), pch=1)
 
-z <- lme(log(phen.ach) ~ treatment + duration, random = ~ 1|plot, data = kluane)
-visreg(z)
-z <- lme(log(phen.ach) ~ treatment * duration, random = ~ 1|plot, data = kluane)
-visreg(z)
+z1 <- lme(log(phen.ach) ~ treatment + duration, random = ~ 1|plot, data = kluane)
+z2 <- lme(log(phen.ach) ~ treatment * duration, random = ~ 1|plot, data = kluane)
+
+par(mfrow = c(2,2))
+visreg(z1)
+visreg(z2)
 plot(z)
 summary(z)
+
+anova(z)
+anova(z, type = "marginal")

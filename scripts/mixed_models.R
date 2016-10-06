@@ -70,3 +70,6 @@ summary(z)
 
 anova(z)
 anova(z, type = "marginal")
+
+AIC(z1)
+AIC(z2)

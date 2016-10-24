@@ -1,0 +1,62 @@
+---
+title: "hw02 - mixed effects model"
+author: "Sandra Emry"
+date: "`r format(Sys.Date())`" 
+output: word_document
+---
+
+## Read in and explore data
+
+```{r}
+#load packages
+library(nlme)
+library(tidyverse)
+library(visreg)
+library(lsmeans)
+
+aging <- read.csv("./data/Aging Data Combined.csv")
+
+# structure of data frame
+str(aging)
+
+# first few rows of dataframe
+head(aging)
+
+# delete rows with NAs
+aging <- aging %>% 
+  na.omit()
+
+```
+
+## Explain (in a paragraph) the purpose of the study that yielded the data.
+Explain the specific data set you are using. For example, say where the data are from, give the meaning of the variables, and so on.
+
+## Plot the data
+```{r}
+ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(color = Order)) + 
+  xlab("distance") + ylab("strain")
+```
+
+State what parameters you will estimate with these data.
+State what hypotheses you will test with these data.
+
+## Fit a mixed effects model
+Fit a linear model to the data in R. Explain in words the model you fit.
+
+```{r}
+
+
+```
+
+Interpret the output: Explain what the parameter estimates are telling you. Explain the null hypotheses and interpret the test results.
+
+# Create a graph to visualize the model fit to the data. Explain what the graph is showing. (Can be similar to your initial graph, but with the model fit added.)
+
+```{r}
+
+```
+
+Address how well the statistical assumptions of your analysis were met, and how you handled violations.
+
+State the conclusions reached from your analyses. What did your estimates and tests tell you?
+

@@ -119,6 +119,5 @@ G <- 2 *(max(loglike) - max(loglikenull))
 # To obtain a P-value for the test, calculate the tail probability from the χ2 distribution
 1 - pchisq(G, 0)
 
-
 # elephant counting -------------------------------------------------------
 

@@ -32,12 +32,13 @@ ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(col
 z <- lme(stanstrain ~ standistance, random = ~1|Species, data = aging)
 
 # view fit of model to data
-visreg(z, points.par = list(cex = 1, col = "red"))
+visreg(z, points.par = list(cex = 0.8, col = "red"), overlay = TRUE, band = TRUE)
 visreg(z, whitespace = 0.4)
+visreg(z, xvar = "standistance", by = "Species", scales=list(rot = 90))
 
 stripchart(stanstrain ~ standistance, vertical = TRUE, method = "jitter", pch = 16,
            col = "red", data = aging)
-yhat <- tapply(fitted(z), aging$stanstrain, mean)
+yhat <- tapply(fitted(z), aging$standistance, mean)
 for(i in 1:length(yhat)){
   lines(rep(yhat[i], 2) ~ c(i-.2, i+.2))
 }
@@ -55,6 +56,7 @@ anova(z)
 
 lsmeans(z, "standistance")
 
+# by species
 stripchart(aging$stanstrain ~ aging$Species, vertical = TRUE, pch = 1)
 stripchart(fitted(z) ~ aging$Species, vertical = TRUE, add = TRUE, pch = "---", col = "red")
 

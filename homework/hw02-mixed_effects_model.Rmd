@@ -33,8 +33,9 @@ Explain the specific data set you are using. For example, say where the data are
 
 ## Plot the data
 ```{r}
-ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(color = Order)) + 
+ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(color = Order)) +
   xlab("distance") + ylab("strain")
+
 ```
 
 State what parameters you will estimate with these data.
@@ -44,6 +45,17 @@ State what hypotheses you will test with these data.
 Fit a linear model to the data in R. Explain in words the model you fit.
 
 ```{r}
+# fit a linear model with position along the blade as a fixed factor, species as random factor and breaking strain as the response variable
+z <- lme(stanstrain ~ standistance, random = ~1|Species, data = aging)
+
+## check assumptions of the model 
+
+# variances are homogenous: resisuals equal for all values of x
+plot(z)
+
+# errors are approximately normally distributed 
+qqnorm(residuals(z))
+qqline(residuals(z))
 
 
 ```
@@ -53,10 +65,11 @@ Interpret the output: Explain what the parameter estimates are telling you. Expl
 # Create a graph to visualize the model fit to the data. Explain what the graph is showing. (Can be similar to your initial graph, but with the model fit added.)
 
 ```{r}
+visreg(z, points.par = list(cex = 0.8, col = "red"))
 
 ```
 
-Address how well the statistical assumptions of your analysis were met, and how you handled violations.
+Statistical assumptions of a linear model were met by the data. Errors were approxiamtely normally distrubuted, as seen in the q-q plot, and variances were homogenous. Each data point is independent of each other, which is evident in the sample design. 
 
 State the conclusions reached from your analyses. What did your estimates and tests tell you?
 

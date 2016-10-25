@@ -30,6 +30,7 @@ aging <- aging %>%
 
 ## Explain (in a paragraph) the purpose of the study that yielded the data.
 Explain the specific data set you are using. For example, say where the data are from, give the meaning of the variables, and so on.
+The dataset used in the assignment is from a paper published by a former graduate student in my supervisor's lab. The paper is entitled Divergent growth strategies between red algae and kelps influence biomechanical properties, and was published in 2015 in American Journal of Botany. The variables used in this analysis are standistance, stanstrain and Species. Macroalgae form new tissue at the base of the meristem, so as distance along the thallus increases, so does the age of tissue. The variable standistance, the fixed factor, is the distance along the thallus, standardized to the mean length of thalli. This is to control for differences in the length of indiviudals, as well as to account for how material properties differ along the thallus in different species. Stanstrain, the response variable, describe show extensible the tissue it, calculated by the change in length divided by original length. Species is included as a random factor in case the outcome is due to a phylogentic explanantion and not aging along the thallus. 
 
 ## Plot the data
 ```{r}
@@ -39,6 +40,7 @@ ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(col
 ```
 
 State what parameters you will estimate with these data.
+I will fit a mixed effects model that will estimate the y-intercept and the coefficient of 
 State what hypotheses you will test with these data.
 
 ## Fit a mixed effects model

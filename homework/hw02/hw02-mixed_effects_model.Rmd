@@ -10,7 +10,7 @@ output: word_document
 ```{r}
 #load packages
 library(nlme)
-library(tidyverse)
+suppressMessages(library(tidyverse))
 library(visreg)
 library(lsmeans)
 

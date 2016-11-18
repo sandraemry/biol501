@@ -37,7 +37,7 @@ visreg(z, whitespace = 0.4)
 visreg(z, xvar = "standistance", by = "Species", scales=list(rot = 90))
 
 stripchart(stanstrain ~ standistance, vertical = TRUE, method = "jitter", pch = 16,
-           col = "red", data = aging)
+           col = "red", data = aging, xlab)
 yhat <- tapply(fitted(z), aging$standistance, mean)
 for(i in 1:length(yhat)){
   lines(rep(yhat[i], 2) ~ c(i-.2, i+.2))

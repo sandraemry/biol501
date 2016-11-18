@@ -5,73 +5,91 @@ date: "`r format(Sys.Date())`"
 output: word_document
 ---
 
-## Read in and explore data
+## Read in and look at the data
 
 ```{r}
 #load packages
 library(nlme)
-suppressMessages(library(tidyverse))
 library(visreg)
-library(lsmeans)
+suppressMessages(library(tidyverse))
 
-aging <- read.csv("./data/Aging Data Combined.csv")
+# read in df: aging
+aging <- read_csv("~/Documents/Biol501/biol501/data/aging.csv")
 
 # structure of data frame
 str(aging)
 
+aging <- aging %>% 
+  na.omit() %>% # delete rows with NAs
+  select(Order, Species, standistance, stanstrain) # select only the variables used in this analysis
+
 # first few rows of dataframe
 head(aging)
 
-# delete rows with NAs
-aging <- aging %>% 
-  na.omit()
-
 ```
 
-## Explain (in a paragraph) the purpose of the study that yielded the data.
-Explain the specific data set you are using. For example, say where the data are from, give the meaning of the variables, and so on.
-The dataset used in the assignment is from a paper published by a former graduate student in my supervisor's lab. The paper is entitled Divergent growth strategies between red algae and kelps influence biomechanical properties, and was published in 2015 in American Journal of Botany. The variables used in this analysis are standistance, stanstrain and Species. Macroalgae form new tissue at the base of the meristem, so as distance along the thallus increases, so does the age of tissue. The variable standistance, the fixed factor, is the distance along the thallus, standardized to the mean length of thalli. This is to control for differences in the length of indiviudals, as well as to account for how material properties differ along the thallus in different species. Stanstrain, the response variable, describe show extensible the tissue it, calculated by the change in length divided by original length. Species is included as a random factor in case the outcome is due to a phylogentic explanantion and not aging along the thallus. 
+## Explain the purpose of the study that yielded the data.
+The dataset used in the assignment is from a paper published by a former graduate student in my supervisor's lab. The paper, entitled "Divergent growth strategies between red algae and kelps influence biomechanical properties", was published in 2015 in *American Journal of Botany*. This study examined how material properties, such as strength and extensibility, that are associated with aging, differ across several species of brown and red algae. The variables used in this analysis are standistance, stanstrain and species. Macroalgae form new tissue in one location, so as distance from this position along the blade increases, so does the age of tissue. The variable standistance represents the position along the thallus, standardized to the mean length of blades. This is to control for differences in the length of individuals, as well as to account for how material properties differ along the thallus in different species. Stanstrain describes how extensible the tissue it, calculated by the change in length divided by original length. Species is included in the model to control for the possibility that differences in material properties are phylogentic in nature and not how aging alters tissues.
 
 ## Plot the data
 ```{r}
-ggplot(data = aging, aes(x = standistance, y = stanstrain)) + geom_point(aes(color = Order)) +
-  xlab("distance") + ylab("strain")
+ggplot(data = aging, aes(x = standistance, y = stanstrain)) + 
+  geom_point(aes(color = Order)) +
+  xlab("position on blade") + 
+  ylab("extensibility") + 
+  geom_smooth(se = TRUE, method = "lm") +
+  theme_bw() +
+  theme(legend.position="right")
 
 ```
 
-State what parameters you will estimate with these data.
-I will fit a mixed effects model that will estimate the y-intercept and the coefficient of 
-State what hypotheses you will test with these data.
+## Parameters estimated with these data
+I will fit a mixed effects model that will estimate the y-intercept (β0) and the slope of the line explained by standistance (β1).  
+Formula: Y = β0 + β1X
+This data will test the hypothesis that as distance increases, strain will decrease due to aging of the tissues.   
+H0: Distance has no effect on strain (β1 = 0)  
+Ha: Distance has an effect on strain (β1 ≠ 0)  
 
 ## Fit a mixed effects model
-Fit a linear model to the data in R. Explain in words the model you fit.
+Below I am fitting a model to the response variable stanstrain, with the predictor variable standistance as a fixed effect. Species is included as a random effect. 
 
 ```{r}
 # fit a linear model with position along the blade as a fixed factor, species as random factor and breaking strain as the response variable
 z <- lme(stanstrain ~ standistance, random = ~1|Species, data = aging)
 
-## check assumptions of the model 
-
+## check assumptions of the model: 
 # variances are homogenous: resisuals equal for all values of x
 plot(z)
+hist(residuals(z))
 
 # errors are approximately normally distributed 
 qqnorm(residuals(z))
 qqline(residuals(z))
 
+# parameter estimates
+summary(z)
 
+# 95% confidence intervals for parameters
+confint(z)
+
+# test the null hypothesis
+anova(z)
 ```
 
-Interpret the output: Explain what the parameter estimates are telling you. Explain the null hypotheses and interpret the test results.
+## Interpret the output: 
 
-# Create a graph to visualize the model fit to the data. Explain what the graph is showing. (Can be similar to your initial graph, but with the model fit added.)
+The results from the anova show a significant value of 0.005 for the parameter of standistance. This means that we can reject the null hypothesis that distance along the thallus has no effect on strain. The parameter for standistance is -0.12, which is equal to the slope of the line. As distance along the thallus increases, the amount of strain decreases, which is what was hypothesized. An intercept of ~0, tells us that the newest tissue, or lowest standistance, has a strain of essentially 0. 
+There are two standard deviation values reported for the random effects. The one labelled intercept explains the variability due to the random effect, Species, added to the model. The value is very small, so this tells us that Species is not explaining much of the variation in the response variable. The residual std dev explains that the variability that is not attributed to either the random or fixed effect. 
 
+## Create a graph to visualize the model fit to the data. Explain what the graph is showing.
+The graph below shows the data points in red, and the predicted values in blue. We can see the model underestimates the amount of variance in the data. There is likely something we are missing, and this model does not fully explain the pattern of extensibility in tissues. 
 ```{r}
-visreg(z, points.par = list(cex = 0.8, col = "red"))
+
+# plot predicted values from the model using visreg
+visreg(z, points.par = list(cex = 1.2, col = "red"))
 
 ```
 
-Statistical assumptions of a linear model were met by the data. Errors were approxiamtely normally distrubuted, as seen in the q-q plot, and variances were homogenous. Each data point is independent of each other, which is evident in the sample design. 
+Statistical assumptions of a linear model were met by the data. Errors are approximately normally distrubuted, as seen in the q-q plot, and variances were homogenous. I assume that the experimental design included random sampling from the population, and that each data point is independent from others. Data meets the sphericity assumption of mixed effects models.
 
-State the conclusions reached from your analyses. What did your estimates and tests tell you?
-
+From the tests done, we can conclude that position on the blade does have an effect on extensibility, such that as you get further away from the point of new  growth, the tissue is less extensible. Because older tissue is less extensible than newer tissue, these sections of the blade will be less likely to withstand certain abiotic factors of a given environment such as high flows or waves. 

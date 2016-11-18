@@ -57,7 +57,7 @@ visreg(mod3)
 
 stripchart(shift ~ treatment, vertical = TRUE, method = "jitter", pch = 16,
            col = "red", data = knees)
-yhat <- tapply(fitted(mod3), mydata$treatment, mean)
+yhat <- tapply(fitted(mod3), knees$treatment, mean)
 for(i in 1:length(yhat)){
   lines(rep(yhat[i], 2) ~ c(i-.2, i+.2))
 }
@@ -87,7 +87,7 @@ plot(mod4)
 
 # log transform longevity 
 fruitflies <- fruitflies %>% 
-  mutate(log_longev = log(longevity.days)) %>% View
+  mutate(log_longev = log(longevity.days)) 
 
 mod5 <- lm(log_longev ~ thorax.mm + treatment, data = fruitflies)
 plot(mod5)

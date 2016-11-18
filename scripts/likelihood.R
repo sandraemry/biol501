@@ -66,5 +66,27 @@ plot(log_like_p)
 # of US 1-dollar bills contaminated with cocaine.
 p[log_like_p == max(log_like_p)]
 
+# 95% confidence intervals 
 max(log_like_p) - (1.92)
-log_like_p
+log_like_p < max(log_like_p) - (1.92)
+
+# Left handed flowers -----------------------------------------------------
+
+
+
+# counting elephants ------------------------------------------------------
+
+x <- 15
+k <- 74
+m <- 27
+n <- seq(75,500)
+# calculate the maximum likelihood estimate for the total number of elephants in the park
+log_like_p <- dhyper(x, m, n, k, log = TRUE)
+plot(log_like_p)
+
+# maximum likelihood estimate 
+n[log_like_p == max(log_like_p)] + m
+
+# 95% confidence interval
+min(n[log_like_p >= max(log_like_p) - (1.92) & log_like_p <= max(log_like_p) + (1.92)] + m)
+max(n[log_like_p >= max(log_like_p) - (1.92) & log_like_p <= max(log_like_p) + (1.92)] + m)
